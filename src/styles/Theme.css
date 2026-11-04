@@ -1,0 +1,74 @@
+
+:root {
+    --primary: #1e3a8a;
+    --primary-hover: #1e40af;
+    --primary-light: #dbeafe;
+
+    --background: #f1f5f9;
+    --surface: #ffffff;
+    --surface-secondary: #f8fafc;
+
+    --text-primary: #172554;
+    --text-secondary: #64748b;
+
+    --border: #e2e8f0;
+
+    --success: #15803d;
+    --success-bg: #dcfce7;
+
+    --warning: #b45309;
+    --warning-bg: #fef3c7;
+
+    --danger: #b91c1c;
+    --danger-bg: #fee2e2;
+
+    --sidebar-bg: #172554;
+    --sidebar-text: #dbeafe;
+}
+
+[data-theme="dark"] {
+    --primary: #60a5fa;
+    --primary-hover: #93c5fd;
+    --primary-light: #1e3a5f;
+
+    --background: #0f172a;
+    --surface: #172338;
+    --surface-secondary: #1e293b;
+
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+
+    --border: #334155;
+
+    --success: #4ade80;
+    --success-bg: #143d2a;
+
+    --warning: #fbbf24;
+    --warning-bg: #453519;
+
+    --danger: #f87171;
+    --danger-bg: #451d27;
+
+    --sidebar-bg: #0b1426;
+    --sidebar-text: #cbd5e1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text-primary);
+}
+
+button, input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
