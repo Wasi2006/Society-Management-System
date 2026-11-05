@@ -1,0 +1,130 @@
+
+.resident-announcements-content {
+    padding: 30px;
+}
+
+.resident-announcements-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.resident-announcements-heading h1 {
+    color: var(--text-primary);
+    font-size: 26px;
+    margin-bottom: 6px;
+}
+
+.resident-announcements-heading p {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.announcement-count {
+    color: var(--text-secondary);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.announcements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.resident-announcement-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.resident-announcement-card:hover {
+    transform: translateY(-2px);
+}
+
+.important-announcement {
+    border-left: 4px solid var(--primary);
+}
+
+.announcement-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.announcement-category,
+.important-label {
+    display: inline-block;
+    padding: 5px 11px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.announcement-category {
+    background: var(--input-bg);
+    color: var(--primary);
+}
+
+.announcement-category.maintenance {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.announcement-category.payments {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.announcement-category.security {
+    background: var(--input-bg);
+    color: var(--primary);
+}
+
+.important-label {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.resident-announcement-card h2 {
+    color: var(--text-primary);
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.announcement-description {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.announcement-card-footer {
+    border-top: 1px solid var(--border);
+    margin-top: 18px;
+    padding-top: 14px;
+}
+
+.announcement-card-footer span {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+@media (max-width: 750px) {
+    .resident-announcements-content {
+        padding: 25px 18px;
+    }
+
+    .resident-announcements-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .resident-announcement-card {
+        padding: 18px;
+    }
+}

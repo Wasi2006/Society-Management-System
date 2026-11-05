@@ -17,7 +17,15 @@ import "./styles/Theme.css";
 
 import AdminSettings from "./pages/admin/AdminSettings";
 
+import ResidentDashboard from "./pages/resident/ResidentDashboard";
 
+import ResidentPayments from "./pages/resident/ResidentPayments";
+
+import ResidentComplaints from "./pages/resident/ResidentComplaints";
+
+import ResidentAnnouncements from "./pages/resident/ResidentAnnouncements";
+
+import ResidentProfile from "./pages/resident/ResidentProfile";
 
 function App() {
     return (
@@ -31,6 +39,11 @@ function App() {
                     <Route path="/admin/payments" element={<AdminPayments />} />
                     <Route path="/admin/announcements" element={<AdminAnnouncements />} />
                     <Route path="/admin/settings" element={<AdminSettings />} />
+                    <Route path="/resident" element={<ResidentDashboard />} />
+                    <Route path="/resident/payments" element={<ResidentPayments />} />
+                    <Route path="/resident/complaints" element={<ResidentComplaints />} />
+                    <Route path="/resident/announcements" element={<ResidentAnnouncements />} />
+                    <Route path="/resident/profile" element={<ResidentProfile />} />
                 </Routes>
             </BrowserRouter>
         </ThemeProvider>

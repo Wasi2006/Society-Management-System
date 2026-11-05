@@ -9,12 +9,12 @@
 
 .announcements-heading h1 {
     font-size: 26px;
-    color: var(--text-primary, #172554);
+    color: var(--text-primary);
     margin-bottom: 7px;
 }
 
 .announcements-heading p {
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary);
 }
 
 .announcement-layout {
@@ -27,21 +27,21 @@
 .announcement-form-section,
 .announcement-list-section {
     padding: 23px;
-    background: var(--card-bg, #fff);
-    border: 1px solid var(--border-color, #e2e8f0);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 12px;
 }
 
 .announcement-form-section h2,
 .announcement-list-section h2 {
     font-size: 19px;
-    color: var(--text-primary, #172554);
+    color: var(--text-primary);
     margin-bottom: 7px;
 }
 
 .announcement-form-section > p,
 .announcement-list-heading p {
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary);
     font-size: 13px;
     margin-bottom: 20px;
 }
@@ -51,7 +51,7 @@
     margin: 16px 0 8px;
     font-size: 14px;
     font-weight: 600;
-    color: var(--text-primary, #172554);
+    color: var(--text-primary);
 }
 
 .announcement-form-section input,
@@ -60,10 +60,10 @@
 .announcement-search {
     width: 100%;
     padding: 11px 13px;
-    border: 1px solid var(--border-color, #cbd5e1);
+    border: 1px solid var(--border);
     border-radius: 7px;
-    background: var(--input-bg, #fff);
-    color: var(--text-primary, #172554);
+    background: var(--surface-secondary);
+    color: var(--text-primary);
     font: inherit;
 }
 
@@ -93,8 +93,9 @@
 
 .announcement-card {
     padding: 17px;
-    border: 1px solid var(--border-color, #e2e8f0);
+    border: 1px solid var(--border);
     border-radius: 9px;
+    background: var(--surface);
 }
 
 .announcement-card-top {
@@ -108,8 +109,8 @@
 .announcement-tag {
     padding: 5px 9px;
     border-radius: 5px;
-    background: #dbeafe;
-    color: #1e40af;
+    background: var(--primary-light);
+    color: var(--primary);
     font-size: 12px;
     font-weight: 600;
 }
@@ -117,26 +118,26 @@
 .announcement-delete {
     border: none;
     background: transparent;
-    color: #dc2626;
+    color: var(--danger);
     cursor: pointer;
     font-weight: 600;
 }
 
 .announcement-card h3 {
-    color: var(--text-primary, #172554);
+    color: var(--text-primary);
     font-size: 16px;
     margin-bottom: 8px;
 }
 
 .announcement-card > p {
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.6;
     margin-bottom: 13px;
 }
 
 .announcement-date {
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary);
     font-size: 12px;
 }
 

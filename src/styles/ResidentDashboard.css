@@ -1,0 +1,329 @@
+
+/* MAIN LAYOUT */
+
+.resident-layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--background);
+}
+
+.resident-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.resident-dashboard-content {
+    padding: 32px 35px;
+}
+
+/* WELCOME SECTION */
+
+.resident-welcome {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.resident-welcome h1 {
+    font-size: 24px;
+    color: var(--text-primary);
+}
+
+.resident-welcome p {
+    color: var(--text-secondary);
+    font-size: 13px;
+    margin-top: 7px;
+}
+
+.resident-house-info {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 18px;
+}
+
+.resident-house-info span,
+.resident-house-info strong {
+    display: block;
+}
+
+.resident-house-info span {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.resident-house-info strong {
+    color: var(--text-primary);
+    font-size: 16px;
+}
+
+/* STATISTICS */
+
+.resident-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.resident-stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 20px;
+}
+
+.resident-stat-icon {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.resident-stat-icon.blue {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.resident-stat-icon.green {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.resident-stat-icon.orange {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.resident-stat-icon.purple {
+    background: #ede9fe;
+    color: #6d28d9;
+}
+
+.resident-stat-details p {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.resident-stat-details h2 {
+    color: var(--text-primary);
+    font-size: 21px;
+    margin: 9px 0;
+}
+
+.resident-stat-details span {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+/* DASHBOARD GRID */
+
+.resident-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 22px;
+    margin-bottom: 25px;
+}
+
+.resident-dashboard-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 23px;
+    min-width: 0;
+}
+
+.resident-section-heading {
+    margin-bottom: 22px;
+}
+
+.resident-section-heading h2 {
+    color: var(--text-primary);
+    font-size: 16px;
+}
+
+.resident-section-heading p {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* PAYMENT TABLE */
+
+.resident-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.resident-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.resident-table th {
+    background: var(--surface-secondary);
+    color: var(--text-secondary);
+    font-size: 11px;
+    padding: 13px;
+}
+
+.resident-table td {
+    color: var(--text-primary);
+    font-size: 12px;
+    padding: 15px 13px;
+    border-bottom: 1px solid var(--border);
+}
+
+/* STATUS */
+
+.resident-status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.resident-status.paid,
+.resident-status.resolved {
+    color: var(--success);
+    background: var(--success-bg);
+}
+
+.resident-status.pending {
+    color: var(--warning);
+    background: var(--warning-bg);
+}
+
+/* COMPLAINTS */
+
+.resident-complaint-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 17px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.resident-complaint-item:last-child {
+    border-bottom: none;
+}
+
+.resident-complaint-item strong,
+.resident-complaint-item div span {
+    display: block;
+}
+
+.resident-complaint-item strong {
+    color: var(--text-primary);
+    font-size: 13px;
+}
+
+.resident-complaint-item div span {
+    color: var(--text-secondary);
+    font-size: 11px;
+    margin-top: 6px;
+}
+
+/* ANNOUNCEMENTS */
+
+.resident-announcements {
+    margin-bottom: 25px;
+}
+
+.resident-announcement-item {
+    display: flex;
+    gap: 15px;
+    padding: 17px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.resident-announcement-item:last-child {
+    border-bottom: none;
+}
+
+.announcement-indicator {
+    width: 9px;
+    height: 9px;
+    background: var(--primary);
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.announcement-content h3 {
+    color: var(--text-primary);
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+
+.announcement-content p {
+    color: var(--text-secondary);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.announcement-content span {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 10px;
+    margin-top: 8px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+
+    .resident-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .resident-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 750px) {
+
+    .resident-dashboard-content {
+        padding: 20px 15px;
+    }
+
+    .resident-welcome {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .resident-welcome h1 {
+        font-size: 21px;
+    }
+
+    .resident-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .resident-dashboard-card {
+        padding: 15px;
+    }
+
+}
+
+@media (max-width: 400px) {
+
+    .resident-complaint-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+}

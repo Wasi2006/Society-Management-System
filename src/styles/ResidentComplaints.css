@@ -1,0 +1,173 @@
+
+.resident-complaints-content {
+    padding: 30px;
+}
+
+.resident-complaints-heading {
+    margin-bottom: 25px;
+}
+
+.resident-complaints-heading h1 {
+    color: var(--text-primary);
+    font-size: 26px;
+    margin-bottom: 6px;
+}
+
+.resident-complaints-heading p {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.complaint-form-section,
+.complaint-history-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 25px;
+}
+
+.complaint-form-section h2,
+.complaint-history-heading h2 {
+    color: var(--text-primary);
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.complaint-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.complaint-form-group label {
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.complaint-form-group select,
+.complaint-form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+}
+
+.complaint-form-group select:focus,
+.complaint-form-group textarea:focus {
+    border-color: var(--primary);
+}
+
+.complaint-form-group textarea {
+    resize: vertical;
+}
+
+.submit-complaint-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.submit-complaint-btn:hover {
+    opacity: 0.9;
+}
+
+.complaint-history-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.complaint-history-heading h2 {
+    margin-bottom: 0;
+}
+
+.complaint-history-heading span {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.complaint-list {
+    margin-top: 20px;
+}
+
+.resident-complaint-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.resident-complaint-card:last-child {
+    border-bottom: none;
+}
+
+.resident-complaint-details h3 {
+    color: var(--text-primary);
+    font-size: 15px;
+    margin-bottom: 7px;
+}
+
+.resident-complaint-details p {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.complaint-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.complaint-status.pending {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.complaint-status.in-progress {
+    background: var(--input-bg);
+    color: var(--primary);
+}
+
+.complaint-status.resolved {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.no-complaints {
+    color: var(--text-secondary);
+    font-size: 14px;
+    padding: 15px 0;
+}
+
+@media (max-width: 750px) {
+    .resident-complaints-content {
+        padding: 25px 18px;
+    }
+
+    .complaint-form-section,
+    .complaint-history-section {
+        padding: 18px;
+    }
+
+    .resident-complaint-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

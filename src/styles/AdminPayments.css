@@ -13,12 +13,12 @@
 
 .payments-heading h1 {
     font-size: 26px;
-    color: var(--text-primary, #172554);
+    color: var(--text-primary);
     margin-bottom: 7px;
 }
 
 .payments-heading p {
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary);
 }
 
 .billing-controls {
@@ -28,8 +28,8 @@
     gap: 20px;
     padding: 20px;
     margin-bottom: 22px;
-    background: var(--card-bg, #fff);
-    border: 1px solid var(--border-color, #e2e8f0);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 12px;
 }
 
@@ -38,15 +38,15 @@
     margin-bottom: 8px;
     font-size: 14px;
     font-weight: 600;
-    color: var(--text-primary, #172554);
+    color: var(--text-primary);
 }
 
 .billing-controls input {
     padding: 10px 12px;
-    border: 1px solid var(--border-color, #cbd5e1);
+    border: 1px solid var(--border);
     border-radius: 7px;
-    background: var(--input-bg, #fff);
-    color: var(--text-primary, #172554);
+    background: var(--surface-secondary);
+    color: var(--text-primary);
     font: inherit;
 }
 
@@ -57,12 +57,12 @@
 }
 
 .monthly-fee-info span {
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary);
     font-size: 13px;
 }
 
 .monthly-fee-info strong {
-    color: var(--text-primary, #172554);
+    color: var(--text-primary);
     font-size: 22px;
 }
 
@@ -70,9 +70,9 @@
     padding: 13px 16px;
     margin-bottom: 20px;
     border-radius: 8px;
-    background: var(--page-bg, #eff6ff);
-    border: 1px solid var(--border-color, #bfdbfe);
-    color: var(--text-primary, #172554);
+    background: var(--primary-light);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
     font-size: 14px;
 }
 
@@ -85,31 +85,31 @@
 
 .payment-stat {
     padding: 22px;
-    background: var(--card-bg, #fff);
-    border: 1px solid var(--border-color, #e2e8f0);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 12px;
 }
 
 .payment-stat span {
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary);
     font-size: 14px;
 }
 
 .payment-stat h2 {
     margin: 12px 0 7px;
     font-size: 25px;
-    color: var(--text-primary, #172554);
+    color: var(--text-primary);
 }
 
 .payment-stat p {
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary);
     font-size: 12px;
 }
 
 .payments-section {
     padding: 22px;
-    background: var(--card-bg, #fff);
-    border: 1px solid var(--border-color, #e2e8f0);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 12px;
 }
 
@@ -119,12 +119,12 @@
 
 .payments-section-heading h2 {
     font-size: 19px;
-    color: var(--text-primary, #172554);
+    color: var(--text-primary);
     margin-bottom: 6px;
 }
 
 .payments-section-heading p {
-    color: var(--text-secondary, #64748b);
+    color: var(--text-secondary);
     font-size: 14px;
 }
 
@@ -137,10 +137,10 @@
 .payments-toolbar input,
 .payments-toolbar select {
     padding: 11px 13px;
-    border: 1px solid var(--border-color, #cbd5e1);
+    border: 1px solid var(--border);
     border-radius: 7px;
-    background: var(--input-bg, #fff);
-    color: var(--text-primary, #172554);
+    background: var(--surface-secondary);
+    color: var(--text-primary);
     font: inherit;
 }
 
@@ -149,22 +149,26 @@
     min-width: 0;
 }
 
+.payments-toolbar input::placeholder {
+    color: var(--text-secondary);
+}
+
 .mark-paid-btn {
     padding: 8px 12px;
     border: none;
     border-radius: 6px;
-    background: #dcfce7;
-    color: #166534;
+    background: var(--success-bg);
+    color: var(--success);
     font-weight: 600;
     cursor: pointer;
 }
 
 .mark-paid-btn:hover {
-    background: #bbf7d0;
+    opacity: 0.85;
 }
 
 .paid-label {
-    color: #15803d;
+    color: var(--success);
     font-size: 13px;
     font-weight: 600;
 }
