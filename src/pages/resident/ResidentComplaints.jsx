@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ResidentSidebar from "../../components/resident/ResidentSidebar";
 import ResidentNavbar from "../../components/resident/ResidentNavbar";
 import "../../styles/ResidentComplaints.css";
@@ -7,23 +7,27 @@ import "../../styles/ResidentComplaints.css";
 function ResidentComplaints() {
     const [category, setCategory] = useState("Maintenance");
     const [description, setDescription] = useState("");
+    const [complaints, setComplaints] = useState([]);
 
-    const [complaints, setComplaints] = useState([
-        {
-            id: 1,
-            title: "Water leakage in street",
-            category: "Maintenance",
-            date: "02 Nov 2026",
-            status: "In Progress",
-        },
-        {
-            id: 2,
-            title: "Street lights not working",
-            category: "Electricity",
-            date: "28 Oct 2026",
-            status: "Resolved",
-        },
-    ]);
+    // Fetch complaints from backend
+    useEffect(() => {
+        const fetchComplaints = async () => {
+            try {
+                const response = await fetch(
+                    "http://localhost:5000/api/complaints"
+                );
+
+                const data = await response.json();
+
+                setComplaints(data.complaints);
+
+            } catch (error) {
+                console.error("Error fetching complaints:", error);
+            }
+        };
+
+        fetchComplaints();
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -114,11 +118,21 @@ function ResidentComplaints() {
 
                         <div className="complaint-list">
                             {complaints.map((complaint) => (
-                                <div className="resident-complaint-card" key={complaint.id}>
+                                <div
+                                    className="resident-complaint-card"
+                                    key={complaint._id}
+                                >
                                     <div className="resident-complaint-details">
                                         <h3>{complaint.title}</h3>
                                         <p>
-                                            {complaint.category} · {complaint.date}
+                                            {complaint.category} ·{" "}
+                                            {new Date(
+                                                complaint.createdAt
+                                            ).toLocaleDateString("en-GB", {
+                                                day: "2-digit",
+                                                month: "short",
+                                                year: "numeric",
+                                            })}
                                         </p>
                                     </div>
 

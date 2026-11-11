@@ -4,6 +4,9 @@ const cors = require("cors");
 require("dotenv").config();
 
 const complaintRoutes = require("./routes/complaintRoutes");
+const residentRoutes = require("./routes/residentRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
+const announcementRoutes = require("./routes/announcementRoutes");
 
 const connectDB = require("./config/db");
 
@@ -13,6 +16,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/complaints", complaintRoutes);
+app.use("/api/residents", residentRoutes);
+app.use("/api/payments", paymentRoutes);
+app.use("/api/announcements", announcementRoutes);
 // Test route
 app.get("/", (req, res) => {
     res.send("Society Management System API is running!");
