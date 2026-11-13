@@ -1,5 +1,7 @@
+
 const Complaint = require("../models/Complaint");
 
+// Create Complaint
 const createComplaint = async (req, res) => {
   try {
     const complaint = new Complaint(req.body);
@@ -18,9 +20,10 @@ const createComplaint = async (req, res) => {
   }
 };
 
+// Get All Complaints
 const getComplaints = async (req, res) => {
   try {
-    const complaints = await Complaint.find();
+    const complaints = await Complaint.find().sort({ createdAt: -1 });
 
     res.status(200).json({
       message: "Complaints fetched successfully!",
@@ -33,15 +36,27 @@ const getComplaints = async (req, res) => {
     });
   }
 };
+
+// Update Complaint Status and Admin Response
 const updateComplaintStatus = async (req, res) => {
   try {
     const id = req.params.id;
-    const status = req.body.status;
+    const { status, response } = req.body;
+
+    const updates = {};
+
+    if (status !== undefined) {
+      updates.status = status;
+    }
+
+    if (response !== undefined) {
+      updates.response = response;
+    }
 
     const complaint = await Complaint.findByIdAndUpdate(
       id,
-      { status: status },
-      { new: true },
+      { $set: updates },
+      { new: true, runValidators: true }
     );
 
     if (!complaint) {
@@ -51,49 +66,45 @@ const updateComplaintStatus = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "Complaint status updated successfully!",
+      message: "Complaint updated successfully!",
       complaint: complaint,
     });
   } catch (error) {
     res.status(500).json({
-      message: "Failed to update complaint status",
+      message: "Failed to update complaint",
       error: error.message,
     });
   }
 };
 
+// Delete Complaint
 const deleteComplaint = async (req, res) => {
-    try {
-        const id = req.params.id;
+  try {
+    const id = req.params.id;
 
-        const complaint = await Complaint.findByIdAndDelete(id);
+    const complaint = await Complaint.findByIdAndDelete(id);
 
-        if (!complaint) {
-            return res.status(404).json({
-                message: "Complaint not found!"
-            });
-        }
-
-        res.status(200).json({
-            message: "Complaint deleted successfully!",
-            complaint: complaint
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            message: "Failed to delete complaint",
-            error: error.message
-        });
+    if (!complaint) {
+      return res.status(404).json({
+        message: "Complaint not found!",
+      });
     }
-};
 
+    res.status(200).json({
+      message: "Complaint deleted successfully!",
+      complaint: complaint,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete complaint",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   createComplaint,
   getComplaints,
   updateComplaintStatus,
-  deleteComplaint
+  deleteComplaint,
 };
-
-
-
