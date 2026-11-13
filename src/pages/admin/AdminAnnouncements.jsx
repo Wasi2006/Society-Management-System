@@ -1,29 +1,16 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import AdminNavbar from "../../components/admin/AdminNavbar";
 
 import "../../styles/AdminAnnouncements.css";
 
+const API_URL = "http://localhost:5000/api/announcements";
+
 function AdminAnnouncements() {
 
-    const [announcements, setAnnouncements] = useState([
-        {
-            id: 1,
-            title: "Monthly Maintenance Payment",
-            description: "All residents are requested to submit their monthly maintenance fees before the 10th.",
-            audience: "All Residents",
-            date: "05 Nov 2026"
-        },
-        {
-            id: 2,
-            title: "Water Supply Maintenance",
-            description: "Water supply will be temporarily interrupted due to maintenance work.",
-            audience: "All Residents",
-            date: "04 Nov 2026"
-        }
-    ]);
+    const [announcements, setAnnouncements] = useState([]);
 
     const [formData, setFormData] = useState({
         title: "",
@@ -32,7 +19,40 @@ function AdminAnnouncements() {
     });
 
     const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [publishing, setPublishing] = useState(false);
+    const [error, setError] = useState("");
+    const [message, setMessage] = useState("");
 
+    // Fetch Announcements
+    const fetchAnnouncements = async () => {
+        try {
+            setLoading(true);
+            setError("");
+
+            const response = await fetch(API_URL);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "Failed to fetch announcements"
+                );
+            }
+
+            setAnnouncements(Array.isArray(data) ? data : data.announcements || []);
+
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchAnnouncements();
+    }, []);
+
+    // Handle Form Changes
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -40,41 +60,92 @@ function AdminAnnouncements() {
         });
     };
 
-    const handlePublish = (e) => {
+    // Publish Announcement
+    const handlePublish = async (e) => {
         e.preventDefault();
 
-        const today = new Date().toLocaleDateString("en-GB", {
+        try {
+            setPublishing(true);
+            setError("");
+            setMessage("");
+
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "Failed to publish announcement"
+                );
+            }
+
+            setMessage("Announcement published successfully!");
+
+            setFormData({
+                title: "",
+                description: "",
+                audience: "All Residents"
+            });
+
+            await fetchAnnouncements();
+
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setPublishing(false);
+        }
+    };
+
+    // Delete Announcement
+    const handleDelete = async (id) => {
+
+        if (!window.confirm("Delete this announcement?")) {
+            return;
+        }
+
+        try {
+            setError("");
+            setMessage("");
+
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: "DELETE"
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "Failed to delete announcement"
+                );
+            }
+
+            setMessage("Announcement deleted successfully!");
+
+            await fetchAnnouncements();
+
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    // Format Date
+    const formatDate = (date) => {
+        if (!date) return "";
+
+        return new Date(date).toLocaleDateString("en-GB", {
             day: "2-digit",
             month: "short",
             year: "numeric"
         });
-
-        const newAnnouncement = {
-            ...formData,
-            id: Date.now(),
-            date: today
-        };
-
-        setAnnouncements(previous => [
-            newAnnouncement,
-            ...previous
-        ]);
-
-        setFormData({
-            title: "",
-            description: "",
-            audience: "All Residents"
-        });
     };
 
-    const handleDelete = (id) => {
-        if (window.confirm("Delete this announcement?")) {
-            setAnnouncements(previous =>
-                previous.filter(item => item.id !== id)
-            );
-        }
-    };
-
+    // Search Announcements
     const filteredAnnouncements = announcements.filter(item =>
         `${item.title} ${item.description}`
             .toLowerCase()
@@ -156,8 +227,11 @@ function AdminAnnouncements() {
                                 <button
                                     type="submit"
                                     className="primary-btn"
+                                    disabled={publishing}
                                 >
-                                    Publish Announcement
+                                    {publishing
+                                        ? "Publishing..."
+                                        : "Publish Announcement"}
                                 </button>
 
                             </form>
@@ -183,45 +257,64 @@ function AdminAnnouncements() {
                                 onChange={e => setSearch(e.target.value)}
                             />
 
+                            {error && (
+                                <p className="error-message">{error}</p>
+                            )}
+
+                            {message && (
+                                <p className="success-message">{message}</p>
+                            )}
+
                             <div className="announcement-list">
 
-                                {filteredAnnouncements.map(item => (
+                                {loading ? (
+                                    <p>Loading announcements...</p>
+                                ) : (
+                                    filteredAnnouncements.map(item => (
 
-                                    <article
-                                        className="announcement-card"
-                                        key={item.id}
-                                    >
+                                        <article
+                                            className="announcement-card"
+                                            key={item._id}
+                                        >
 
-                                        <div className="announcement-card-top">
-                                            <span className="announcement-tag">
-                                                {item.audience}
+                                            <div className="announcement-card-top">
+
+                                                <span className="announcement-tag">
+                                                    {item.audience}
+                                                </span>
+
+                                                <button
+                                                    className="announcement-delete"
+                                                    onClick={() =>
+                                                        handleDelete(item._id)
+                                                    }
+                                                >
+                                                    Delete
+                                                </button>
+
+                                            </div>
+
+                                            <h3>{item.title}</h3>
+
+                                            <p>{item.description}</p>
+
+                                            <span className="announcement-date">
+                                                Published: {formatDate(
+                                                    item.publishedAt
+                                                )}
                                             </span>
 
-                                            <button
-                                                className="announcement-delete"
-                                                onClick={() => handleDelete(item.id)}
-                                            >
-                                                Delete
-                                            </button>
-                                        </div>
+                                        </article>
 
-                                        <h3>{item.title}</h3>
-
-                                        <p>{item.description}</p>
-
-                                        <span className="announcement-date">
-                                            Published: {item.date}
-                                        </span>
-
-                                    </article>
-
-                                ))}
-
-                                {filteredAnnouncements.length === 0 && (
-                                    <p className="empty-message">
-                                        No announcements found.
-                                    </p>
+                                    ))
                                 )}
+
+                                {!loading &&
+                                    filteredAnnouncements.length === 0 && (
+                                        <p className="empty-message">
+                                            No announcements found.
+                                        </p>
+                                    )}
 
                             </div>
 

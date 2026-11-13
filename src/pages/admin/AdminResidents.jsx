@@ -1,43 +1,24 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import AdminNavbar from "../../components/admin/AdminNavbar";
 
 import "../../styles/AdminResidents.css";
 
+const API_URL = "http://localhost:5000/api/residents";
+
 function AdminResidents() {
 
-    const [residents, setResidents] = useState([
-        {
-            id: 1,
-            name: "Ali Ahmed",
-            email: "ali@gmail.com",
-            phone: "03001234567",
-            house: "A-101",
-            status: "Active"
-        },
-        {
-            id: 2,
-            name: "Usman Khan",
-            email: "usman@gmail.com",
-            phone: "03011234567",
-            house: "B-204",
-            status: "Active"
-        },
-        {
-            id: 3,
-            name: "Hassan Ali",
-            email: "hassan@gmail.com",
-            phone: "03021234567",
-            house: "C-105",
-            status: "Inactive"
-        }
-    ]);
+    const [residents, setResidents] = useState([]);
 
     const [search, setSearch] = useState("");
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState(null);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    const [saving, setSaving] = useState(false);
 
     const emptyForm = {
         name: "",
@@ -49,12 +30,52 @@ function AdminResidents() {
 
     const [formData, setFormData] = useState(emptyForm);
 
+    // GET ALL RESIDENTS
+    const fetchResidents = async () => {
+        try {
+            setLoading(true);
+            setError("");
+
+            const response = await fetch(API_URL);
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch residents.");
+            }
+
+            const data = await response.json();
+
+            // Map backend fields to frontend fields
+            const formattedResidents = data.map(resident => ({
+                id: resident._id,
+                name: resident.residentName,
+                email: resident.email,
+                phone: resident.phone,
+                house: resident.house,
+                status: resident.status
+            }));
+
+            setResidents(formattedResidents);
+        }
+        catch (error) {
+            setError(error.message);
+        }
+        finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchResidents();
+    }, []);
+
+    // SEARCH
     const filteredResidents = residents.filter(resident =>
         `${resident.name} ${resident.email} ${resident.house}`
             .toLowerCase()
             .includes(search.toLowerCase())
     );
 
+    // FORM INPUT HANDLING
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -62,32 +83,59 @@ function AdminResidents() {
         });
     };
 
-    const handleSubmit = (e) => {
+    // ADD / UPDATE RESIDENT
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (editingId !== null) {
-            setResidents(previous =>
-                previous.map(resident =>
-                    resident.id === editingId
-                        ? { ...resident, ...formData }
-                        : resident
-                )
-            );
-        } else {
-            setResidents(previous => [
-                ...previous,
-                {
-                    ...formData,
-                    id: Date.now()
-                }
-            ]);
-        }
+        try {
+            setSaving(true);
+            setError("");
 
-        closeForm();
+            const residentData = {
+                residentName: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                house: formData.house,
+                status: formData.status
+            };
+
+            const url = editingId
+                ? `${API_URL}/${editingId}`
+                : API_URL;
+
+            const method = editingId ? "PUT" : "POST";
+
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(residentData)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Operation failed.");
+            }
+
+            await fetchResidents();
+
+            closeForm();
+
+        }
+        catch (error) {
+            setError(error.message);
+        }
+        finally {
+            setSaving(false);
+        }
     };
 
+    // EDIT RESIDENT
     const handleEdit = (resident) => {
         setEditingId(resident.id);
+
         setFormData({
             name: resident.name,
             email: resident.email,
@@ -95,21 +143,40 @@ function AdminResidents() {
             house: resident.house,
             status: resident.status
         });
+
         setShowForm(true);
     };
 
-    const handleDelete = (id) => {
+    // DELETE RESIDENT
+    const handleDelete = async (id) => {
         const confirmed = window.confirm(
             "Are you sure you want to delete this resident?"
         );
 
-        if (confirmed) {
-            setResidents(previous =>
-                previous.filter(resident => resident.id !== id)
-            );
+        if (!confirmed) return;
+
+        try {
+            setError("");
+
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: "DELETE"
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to delete resident.");
+            }
+
+            await fetchResidents();
+
+        }
+        catch (error) {
+            setError(error.message);
         }
     };
 
+    // CLOSE FORM
     const closeForm = () => {
         setShowForm(false);
         setEditingId(null);
@@ -144,6 +211,10 @@ function AdminResidents() {
                         </button>
                     </div>
 
+                    {error && (
+                        <p className="error-message">{error}</p>
+                    )}
+
                     <div className="resident-summary">
 
                         <div className="resident-stat">
@@ -153,12 +224,16 @@ function AdminResidents() {
 
                         <div className="resident-stat">
                             <span>Active Residents</span>
-                            <h2>{residents.filter(r => r.status === "Active").length}</h2>
+                            <h2>
+                                {residents.filter(r => r.status === "Active").length}
+                            </h2>
                         </div>
 
                         <div className="resident-stat">
                             <span>Inactive Residents</span>
-                            <h2>{residents.filter(r => r.status === "Inactive").length}</h2>
+                            <h2>
+                                {residents.filter(r => r.status === "Inactive").length}
+                            </h2>
                         </div>
 
                     </div>
@@ -191,47 +266,57 @@ function AdminResidents() {
 
                                 <tbody>
 
-                                    {filteredResidents.map(resident => (
-                                        <tr key={resident.id}>
-
-                                            <td>{resident.name}</td>
-                                            <td>{resident.email}</td>
-                                            <td>{resident.phone}</td>
-                                            <td>{resident.house}</td>
-
-                                            <td>
-                                                <span className={`status-badge ${resident.status.toLowerCase()}`}>
-                                                    {resident.status}
-                                                </span>
-                                            </td>
-
-                                            <td className="resident-actions">
-
-                                                <button
-                                                    className="edit-btn"
-                                                    onClick={() => handleEdit(resident)}
-                                                >
-                                                    Edit
-                                                </button>
-
-                                                <button
-                                                    className="delete-btn"
-                                                    onClick={() => handleDelete(resident.id)}
-                                                >
-                                                    Delete
-                                                </button>
-
-                                            </td>
-
-                                        </tr>
-                                    ))}
-
-                                    {filteredResidents.length === 0 && (
+                                    {loading ? (
                                         <tr>
                                             <td colSpan="6" className="empty-message">
-                                                No residents found.
+                                                Loading residents...
                                             </td>
                                         </tr>
+                                    ) : (
+                                        <>
+                                            {filteredResidents.map(resident => (
+                                                <tr key={resident.id}>
+
+                                                    <td>{resident.name}</td>
+                                                    <td>{resident.email}</td>
+                                                    <td>{resident.phone}</td>
+                                                    <td>{resident.house}</td>
+
+                                                    <td>
+                                                        <span className={`status-badge ${resident.status.toLowerCase()}`}>
+                                                            {resident.status}
+                                                        </span>
+                                                    </td>
+
+                                                    <td className="resident-actions">
+
+                                                        <button
+                                                            className="edit-btn"
+                                                            onClick={() => handleEdit(resident)}
+                                                        >
+                                                            Edit
+                                                        </button>
+
+                                                        <button
+                                                            className="delete-btn"
+                                                            onClick={() => handleDelete(resident.id)}
+                                                        >
+                                                            Delete
+                                                        </button>
+
+                                                    </td>
+
+                                                </tr>
+                                            ))}
+
+                                            {filteredResidents.length === 0 && (
+                                                <tr>
+                                                    <td colSpan="6" className="empty-message">
+                                                        No residents found.
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </>
                                     )}
 
                                 </tbody>
@@ -250,7 +335,7 @@ function AdminResidents() {
 
                                 <div className="modal-heading">
                                     <h2>
-                                        {editingId !== null
+                                        {editingId
                                             ? "Edit Resident"
                                             : "Add New Resident"}
                                     </h2>
@@ -326,10 +411,13 @@ function AdminResidents() {
                                         <button
                                             type="submit"
                                             className="primary-btn"
+                                            disabled={saving}
                                         >
-                                            {editingId !== null
-                                                ? "Save Changes"
-                                                : "Add Resident"}
+                                            {saving
+                                                ? "Saving..."
+                                                : editingId
+                                                    ? "Save Changes"
+                                                    : "Add Resident"}
                                         </button>
 
                                     </div>

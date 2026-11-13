@@ -1,105 +1,266 @@
 
+import { useState, useEffect } from "react";
+
 import ResidentSidebar from "../../components/resident/ResidentSidebar";
 import ResidentNavbar from "../../components/resident/ResidentNavbar";
 import "../../styles/ResidentAnnouncements.css";
 
+const API_URL = "http://localhost:5000/api";
+
 function ResidentAnnouncements() {
-    const announcements = [
-        {
-            id: 1,
-            title: "Water Supply Maintenance",
-            category: "Maintenance",
-            date: "04 Nov 2026",
-            important: true,
-            description:
-                "Water supply will remain temporarily unavailable on 6 November from 10 AM to 2 PM due to scheduled maintenance work. Residents are requested to store water in advance.",
-        },
-        {
-            id: 2,
-            title: "Monthly Maintenance Fee Reminder",
-            category: "Payments",
-            date: "01 Nov 2026",
-            important: true,
-            description:
-                "Residents are reminded to pay their monthly maintenance fee of Rs. 5,000. Please ensure your payments are completed before the due date.",
-        },
-        {
-            id: 3,
-            title: "Community Cleaning Drive",
-            category: "General",
-            date: "28 Oct 2026",
-            important: false,
-            description:
-                "A community cleaning drive will be organized this Sunday. Residents are encouraged to participate and help maintain a clean environment.",
-        },
-        {
-            id: 4,
-            title: "Security Guidelines Update",
-            category: "Security",
-            date: "25 Oct 2026",
-            important: false,
-            description:
-                "All residents are requested to cooperate with security staff and ensure that visitors are properly registered at the main entrance.",
-        },
-    ];
+
+    const [residents, setResidents] = useState([]);
+    const [selectedResident, setSelectedResident] = useState("");
+
+    const [announcements, setAnnouncements] = useState([]);
+
+    const [loadingResidents, setLoadingResidents] = useState(true);
+    const [loadingAnnouncements, setLoadingAnnouncements] = useState(false);
+
+    const [error, setError] = useState("");
+
+    // Fetch Residents
+    useEffect(() => {
+
+        const fetchResidents = async () => {
+            try {
+                setError("");
+
+                const response = await fetch(`${API_URL}/residents`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch residents");
+                }
+
+                const residentsData = Array.isArray(data)
+                    ? data
+                    : data.residents || [];
+
+                setResidents(residentsData);
+
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoadingResidents(false);
+            }
+        };
+
+        fetchResidents();
+
+    }, []);
+
+    // Get Selected Resident
+    const selectedResidentData = residents.find(
+        resident => resident._id === selectedResident
+    );
+
+    // Fetch and Filter Announcements
+    useEffect(() => {
+
+        if (!selectedResidentData) {
+            setAnnouncements([]);
+            return;
+        }
+
+        const fetchAnnouncements = async () => {
+            try {
+                setLoadingAnnouncements(true);
+                setError("");
+
+                const response = await fetch(`${API_URL}/announcements`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch announcements");
+                }
+
+                const allAnnouncements = Array.isArray(data)
+                    ? data
+                    : data.announcements || [];
+
+                // Get Resident Block
+                const residentBlock = selectedResidentData.house
+                    ? selectedResidentData.house.split("-")[0].toUpperCase()
+                    : "";
+
+                // Filter announcements according to audience
+                const filteredAnnouncements = allAnnouncements.filter(
+                    announcement => {
+
+                        if (announcement.audience === "All Residents") {
+                            return true;
+                        }
+
+                        return announcement.audience === `Block ${residentBlock}`;
+                    }
+                );
+
+                setAnnouncements(filteredAnnouncements);
+
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoadingAnnouncements(false);
+            }
+        };
+
+        fetchAnnouncements();
+
+    }, [selectedResident]);
+
+    // Format Date
+    const formatDate = (date) => {
+        if (!date) return "";
+
+        return new Date(date).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+    };
 
     return (
         <div className="resident-layout">
+
             <ResidentSidebar />
 
             <main className="resident-main">
+
                 <ResidentNavbar />
 
                 <div className="resident-announcements-content">
+
                     <div className="resident-announcements-heading">
+
                         <div>
                             <h1>Announcements</h1>
-                            <p>Stay updated with the latest society news and notices.</p>
+                            <p>
+                                Stay updated with the latest society news and notices.
+                            </p>
                         </div>
 
                         <span className="announcement-count">
                             {announcements.length} Announcements
                         </span>
+
                     </div>
 
+                    {/* Temporary Resident Selection */}
+                    <div className="resident-selection">
+
+                        <label>Select Resident</label>
+
+                        <select
+                            value={selectedResident}
+                            onChange={e => setSelectedResident(e.target.value)}
+                            disabled={loadingResidents}
+                        >
+                            <option value="">
+                                {loadingResidents
+                                    ? "Loading residents..."
+                                    : "Select your resident account"}
+                            </option>
+
+                            {residents.map(resident => (
+                                <option
+                                    key={resident._id}
+                                    value={resident._id}
+                                >
+                                    {resident.residentName} - {resident.house}
+                                </option>
+                            ))}
+
+                        </select>
+
+                    </div>
+
+                    {/* Error Message */}
+                    {error && (
+                        <p className="error-message">{error}</p>
+                    )}
+
+                    {/* Announcements */}
                     <div className="announcements-list">
-                        {announcements.map((announcement) => (
-                            <article
-                                className={`resident-announcement-card ${
-                                    announcement.important ? "important-announcement" : ""
-                                }`}
-                                key={announcement.id}
-                            >
-                                <div className="announcement-card-top">
-                                    <span
-                                        className={`announcement-category ${announcement.category
-                                            .toLowerCase()
-                                            .replace(" ", "-")}`}
-                                    >
-                                        {announcement.category}
-                                    </span>
 
-                                    {announcement.important && (
-                                        <span className="important-label">
-                                            Important
+                        {!selectedResident && !loadingResidents && (
+                            <p className="empty-message">
+                                Please select a resident to view announcements.
+                            </p>
+                        )}
+
+                        {loadingAnnouncements && (
+                            <p>Loading announcements...</p>
+                        )}
+
+                        {!loadingAnnouncements &&
+                            selectedResident &&
+                            announcements.map(announcement => (
+
+                                <article
+                                    className={`resident-announcement-card ${
+                                        announcement.important
+                                            ? "important-announcement"
+                                            : ""
+                                    }`}
+                                    key={announcement._id}
+                                >
+
+                                    <div className="announcement-card-top">
+
+                                        <span
+                                            className={`announcement-category ${
+                                                (announcement.category || "General")
+                                                    .toLowerCase()
+                                                    .replace(" ", "-")
+                                            }`}
+                                        >
+                                            {announcement.category || "General"}
                                         </span>
-                                    )}
-                                </div>
 
-                                <h2>{announcement.title}</h2>
+                                        {announcement.important && (
+                                            <span className="important-label">
+                                                Important
+                                            </span>
+                                        )}
 
-                                <p className="announcement-description">
-                                    {announcement.description}
+                                    </div>
+
+                                    <h2>{announcement.title}</h2>
+
+                                    <p className="announcement-description">
+                                        {announcement.description}
+                                    </p>
+
+                                    <div className="announcement-card-footer">
+
+                                        <span>
+                                            Published on: {
+                                                formatDate(announcement.publishedAt)
+                                            }
+                                        </span>
+
+                                    </div>
+
+                                </article>
+
+                            ))
+                        }
+
+                        {!loadingAnnouncements &&
+                            selectedResident &&
+                            announcements.length === 0 && (
+                                <p className="empty-message">
+                                    No announcements available for your block.
                                 </p>
+                            )}
 
-                                <div className="announcement-card-footer">
-                                    <span>Published on: {announcement.date}</span>
-                                </div>
-                            </article>
-                        ))}
                     </div>
+
                 </div>
+
             </main>
+
         </div>
     );
 }
